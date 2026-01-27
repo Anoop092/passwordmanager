@@ -1,0 +1,27 @@
+target/
+*.log
+
+# Eclipse
+.project
+.classpath
+.settings/
+*.launch
+
+# IntelliJ (optional, if project is opened there)
+.idea/
+*.iml
+
+# VS Code (optional)
+.vscode/
+
+# OS-specific
+.DS_Store
+Thumbs.db
+
+# Java
+*.class
+
+# Package files
+*.jar
+*.war
+*.ear
