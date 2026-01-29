@@ -8,4 +8,7 @@ public class UtilServices {
 	  EmailValidator validator = EmailValidator.getInstance();
 	  return validator.isValid(email);
   }
+  public static boolean isPasswordValid(char[] password){
+	   return password == null || password.length == 0 ? false : true;
+  }
 }

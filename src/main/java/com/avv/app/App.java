@@ -1,6 +1,8 @@
 package com.avv.app;
 import java.util.Scanner;
 
+import com.avv.app.ui.UIHandler;
+
 public class App 
 {
     public static void main( String[] args )
@@ -10,7 +12,8 @@ public class App
         System.out.println("Please enter '1' for signin or '2' for login ");
         String input = sc.nextLine().trim();
         if(input.equals("1")){
-        	//sign up
+        	UIHandler ui  = new UIHandler(sc);
+        	ui.signup();
         }else if(input.equals("2")){
         	// login
         }else{

@@ -1,7 +1,10 @@
 package com.avv.app.services;
 
 import java.security.SecureRandom;
+import java.util.Arrays;
 import java.util.Base64;
+
+import com.avv.app.repositories.UserRepository;
 
 public class SignupServices {
    private String email;
@@ -19,6 +22,8 @@ public class SignupServices {
 	    this.salt = Base64.getEncoder().encodeToString(salt);
 	 }
    public void save(){
-	   
+	   UserRepository ur = new UserRepository();
+	   generateSalt();
+	   ur.saveUser(this.email, Arrays.hashCode(this.masterPassword), this.salt);
    }
 }
