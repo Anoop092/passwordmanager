@@ -7,8 +7,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import com.avv.app.dto.UserDTO;
+
 public class UserRepository {
    private String url = "jdbc:sqlite:C:\\sqllite\\passwordmanager";
+   private Connection setupConnection() throws SQLException{
+	   Connection con = DriverManager.getConnection(url);
+	   return con;
+   }
    public int saveUser(String email,int hash, String salt){
 	   Connection con;
 	   int userId = -1;
@@ -32,6 +38,7 @@ public class UserRepository {
 		  ps.executeUpdate();
 		  // get user id
 		  userId = getUserId(con,email);
+		  con.close();
 
 	   }catch(Exception ex){
 		   System.err.println(ex.getMessage());
@@ -40,13 +47,25 @@ public class UserRepository {
 	   return userId;
   }
    public int getUserId(Connection con, String email) throws SQLException{
-	   String query = "SELECT * FROM users;";
+	   String query = "SELECT * FROM users WHERE email LIKE " +"'"+email+"'" +";";
 	   Statement st = con.createStatement();
 	   ResultSet rs = st.executeQuery(query);
 	   if(rs.next()){
 		   return rs.getInt(1);
 	   }
 	   return -1;
+   }
+   public UserDTO findUser(String email) throws SQLException{
+	   UserDTO user = null;
+	   Connection con = setupConnection();
+	   String query = "SELECT * FROM users WHERE email LIKE " +"'"+email+"'" +";";
+	   Statement st = con.createStatement();
+	   ResultSet rs = st.executeQuery(query);
+	   if(rs.next()){
+		   user = new UserDTO(rs.getInt("id"),rs.getString("email"),rs.getInt("password"),rs.getString("salt"));
+	   }
+	   return user;
+	   
    }
   
 }

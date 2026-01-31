@@ -16,8 +16,11 @@ public class App
         	ui.signup();
         }else if(input.equals("2")){
         	// login
+        	UIHandler ui = new UIHandler(sc);
+        	ui.login();
         }else{
         	System.out.println("Invalid input");
         }
+    	
     }
 }
