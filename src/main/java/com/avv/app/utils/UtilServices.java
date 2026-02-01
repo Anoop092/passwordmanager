@@ -1,5 +1,7 @@
 package com.avv.app.utils;
 
+import java.util.Arrays;
+
 import org.apache.commons.validator.routines.EmailValidator;
 
 public class UtilServices {
@@ -10,6 +12,9 @@ public class UtilServices {
   }
   public static boolean isPasswordValid(char[] password){
 	   return password == null || password.length == 0 ? false : true;
+  }
+  public static int hashPassword(char[] password){
+	  return Arrays.hashCode(password);
   }
   
 }

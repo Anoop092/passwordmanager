@@ -22,6 +22,11 @@ public class CryptoServices {
 	
 	   
    }
+   private static Vault jsonTOVault(String json) throws Exception{
+	   Vault vault = objectMapper.readValue(json,Vault.class);
+	   return vault;
+	   
+   }
    public static EncryptedVaultDTO encrpytVault(char[] password, String salt,Vault vault,int userId) throws Exception{
 	   // generate the secret key
 	   SecretKey sk = KeyServices.generateKey(password, salt);
@@ -30,7 +35,7 @@ public class CryptoServices {
 	   SecureRandom random = new SecureRandom();
 	   random.nextBytes(iv);
 	   IvParameterSpec ivSpec = new IvParameterSpec(iv);
-	   // convert vault into json format
+	   // convert vault into JSON format
 	   String json = vaultTOJson(vault);
 	   // cipher encrypt the data
 	   String encryptedMessage = encyptByCipher(sk, json, ivSpec);
@@ -44,7 +49,25 @@ public class CryptoServices {
     	byte[] encrypted = cipher.doFinal(json.getBytes(StandardCharsets.UTF_8));
     	String encryptedMessage = Base64.getEncoder().encodeToString(encrypted);
     	return encryptedMessage;
-    	
-    	
-    }
+    	}
+    public static Vault deCryptVault(EncryptedVaultDTO enc, String salt,char[] password) throws Exception{
+    	// generate secret key
+    	SecretKey sk = KeyServices.generateKey(password,salt);
+    	// get iv
+    	byte[] iv = enc.getIv();
+    	IvParameterSpec ivp = new IvParameterSpec(iv);
+    	// getting deCrypted  in JSON format 
+    	String json = cipherDecrypt(sk, enc.getEncryptedVault(), ivp);
+    	// convert JSON into vault object
+        Vault vault = jsonTOVault(json);
+        // return the vault
+        return vault;
+   }
+   private static String cipherDecrypt(SecretKey sk, String encrypt,IvParameterSpec iv) throws Exception{
+	   Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+	   cipher.init(Cipher.DECRYPT_MODE, sk,iv);
+	   byte[] decrypted = cipher.doFinal(Base64.getDecoder().decode(encrypt));
+	   return new String(decrypted, StandardCharsets.UTF_8);
+	   
+   }
 }

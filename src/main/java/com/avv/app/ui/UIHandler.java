@@ -3,7 +3,10 @@ package com.avv.app.ui;
 import java.util.Scanner;
 
 import com.avv.app.dto.RequestDTO;
+import com.avv.app.dto.SessionDTO;
 import com.avv.app.dto.UserDTO;
+import com.avv.app.dto.Vault;
+import com.avv.app.services.AuthServices;
 import com.avv.app.services.LoginServices;
 import com.avv.app.services.SignupServices;
 import com.avv.app.utils.UtilServices;
@@ -63,22 +66,13 @@ public void login(){
 	
 	}
 	RequestDTO req = new RequestDTO(email, password);
-    // verify email exists or not
-	try {
-		if(!LoginServices.isUserExists(req)){
-			System.out.println("email doesnot exists please signup...");
-			return;
-		}
-	} catch (Exception e) {
-		System.out.println("there was internal server error:" + e.getMessage());
-		return;
+	try{
+		SessionDTO sDto  = AuthServices.login(req);
+		SessionUI si = new SessionUI(sc, sDto);
+		si.start();
+	}catch(Exception ex){
+		System.out.println(ex.getMessage());
 	}
-	// verify the password
-	if(!LoginServices.verifyPassword(req)){
-		System.out.println("Please verify the password");
-		return;
-	}
-	System.out.println("Sucessfully logged in..........");
-    
+	
 }
 }

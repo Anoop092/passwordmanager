@@ -12,4 +12,7 @@ public class Vault {
  public ArrayList<VaultEntry> getEntries(){
 	 return this.entries;
  }
+ public void addEntries(VaultEntry ve){
+	 this.entries.add(ve);
+ }
 }
