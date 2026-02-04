@@ -2,6 +2,8 @@ package com.avv.app.services;
 
 import java.util.Optional;
 
+import javax.crypto.SecretKey;
+
 import com.avv.app.dto.EncryptedVaultDTO;
 import com.avv.app.dto.RequestDTO;
 import com.avv.app.dto.SessionDTO;
@@ -26,9 +28,11 @@ public class AuthServices {
 	  // get the vault from vault repository
 	  Optional<EncryptedVaultDTO> encryptedVaultDTO = VaultRepository.getVaults(user.getUserId());
 	  EncryptedVaultDTO dto = encryptedVaultDTO.get();
+	  //generate the key
+	  SecretKey secretKey = KeyServices.generateKey(password,user.getSalt());
 	  //deCrypt the vault
 	  Vault vault = CryptoServices.deCryptVault(dto,user.getSalt(),req.getPassword());
-	  SessionDTO sdto = new SessionDTO(vault, user.getUserId());
+	  SessionDTO sdto = new SessionDTO(vault, user.getUserId(),secretKey,dto.getIv());
 	  return sdto;
 	}
   public static boolean comparePassword(int enteredPassword, int password){

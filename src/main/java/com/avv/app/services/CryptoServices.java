@@ -70,4 +70,8 @@ public class CryptoServices {
 	   return new String(decrypted, StandardCharsets.UTF_8);
 	   
    }
+   public static String encryptVault(String json,SecretKey secretKey,byte[] iv) throws Exception{
+	   IvParameterSpec ivSpec = new IvParameterSpec(iv);
+	   return encyptByCipher(secretKey, json, ivSpec);
+   }
 }
